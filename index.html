@@ -16,7 +16,7 @@
 h2{font-size:20px;margin:0 0 17px} h3{font-size:16px;margin:20px 0 9px}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}@media(max-width:650px){.grid{grid-template-columns:1fr}.hero h1{font-size:26px}}
 label{display:block;font-weight:600;margin-bottom:6px} input,select,textarea{width:100%;border:1px solid var(--line);border-radius:10px;padding:11px 12px;font:inherit;background:#fff;color:var(--ink)} textarea{min-height:90px;resize:vertical}
-.choice{display:flex;gap:10px;align-items:flex-start;padding:12px;border:1px solid var(--line);border-radius:12px;margin:8px 0;font-weight:400}.choice input{width:auto;margin-top:4px}.choice span{display:block}.hint{font-size:13px;color:var(--muted);font-weight:400}
+.choice-block{margin-top:8px;padding:10px 0;border-top:1px solid rgba(0,0,0,.06)}.choice-block:first-child{border-top:0}.choice-block h3{margin-top:0}.choice{display:flex;gap:10px;align-items:flex-start;padding:12px;border:1px solid var(--line);border-radius:12px;margin:8px 0;font-weight:400}.choice input{width:auto;margin-top:4px}.choice span{display:block}.hint{font-size:13px;color:var(--muted);font-weight:400}
 .checkgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px}@media(max-width:650px){.checkgrid{grid-template-columns:1fr}}
 .btn{border:0;border-radius:12px;padding:13px 18px;font:600 15px inherit;cursor:pointer;background:var(--accent);color:white}.btn.secondary{background:var(--soft);color:var(--ink);margin-left:8px}
 .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}.notice{background:#f0eee9;border-radius:12px;padding:12px 14px;color:#5f5b55;font-size:13px}
@@ -35,6 +35,8 @@ footer{color:var(--muted);font-size:12px;text-align:center;margin-top:18px}
 .contact{margin-left:auto}
 @media(max-width:650px){.answer-row{grid-template-columns:1fr;gap:4px}.preview-head{align-items:flex-start;flex-direction:column}.contact{margin-left:0}}
 
+
+.choice input[type="radio"],.choice input[type="checkbox"]{appearance:none;-webkit-appearance:none;width:18px;height:18px;min-width:18px;margin-top:2px;border:1px solid var(--line);border-radius:4px;background:#fff;cursor:pointer;position:relative}.choice input[type="radio"]:checked,.choice input[type="checkbox"]:checked{background:var(--accent);border-color:var(--accent);box-shadow:inset 0 0 0 4px #fff}.choice input[type="radio"]:focus-visible,.choice input[type="checkbox"]:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script><style>
 
@@ -164,10 +166,6 @@ footer{color:var(--muted);font-size:12px;text-align:center;margin-top:18px}
 <div class="progress"><div class="bar" id="bar"></div></div><div class="actions"><a class="btn contact" href="https://max.ru/u/f9LHodD0cOLwZFEDhX0K3_r5JFOsJvkSpMO6MNReC4KBSv2TttwNzRMCwb0" rel="noopener noreferrer" style="text-decoration:none" target="_blank">Связаться</a></div>
 </section>
 <form action="#" id="brief" method="post">
-
-
-
-
 <div class="card">
 <h2>1. Данные заказчика</h2>
 <div class="grid">
@@ -225,50 +223,27 @@ footer{color:var(--muted);font-size:12px;text-align:center;margin-top:18px}
 </div>
 <h3>Особые требования</h3>
 <div class="checkgrid">
-<label class="choice"><input name="needs" type="checkbox" value="storage"/><span>Много хранения</span></label>
-<label class="choice"><input name="needs" type="checkbox" value="work"/><span>Рабочее место</span></label>
-<label class="choice"><input name="needs" type="checkbox" value="tv"/><span>ТВ-зона</span></label>
-<label class="choice"><input name="needs" type="checkbox" value="kids"/><span>Детская зона</span></label>
-<label class="choice"><input name="needs" type="checkbox" value="pets"/><span>Зона для питомцев</span></label>
-<label class="choice"><input name="needs" type="checkbox" value="custom"/><span>Нестандартная мебель</span></label>
-</div>
-
-<div class="field-block communication-extra">
-<h3>Конструктивные особенности мебели</h3>
-<div class="checkgrid">
-<label><input name="furniture_features" type="checkbox" value="Встроенная мебель"/> Встроенная мебель</label>
-<label><input name="furniture_features" type="checkbox" value="Минимальный зазор до потолка"/> Минимальный зазор до потолка</label>
-<label><input name="furniture_features" type="checkbox" value="Ножки"/> Ножки</label>
-</div>
-</div>
-</div>
+<label class="choice"><input name="furniture_features" type="checkbox" value="Встроенная мебель"/><span>Встроенная мебель</span></label><label class="choice"><input name="furniture_features" type="checkbox" value="Минимальный зазор до потолка"/><span>Минимальный зазор до потолка</span></label><label class="choice"><input name="needs" type="checkbox" value="storage"/><span>Много хранения</span></label><label class="choice"><input name="needs" type="checkbox" value="work"/><span>Рабочее место</span></label><label class="choice"><input name="needs" type="checkbox" value="tv"/><span>ТВ-зона</span></label><label class="choice"><input name="needs" type="checkbox" value="kids"/><span>Детская зона</span></label><label class="choice"><input name="needs" type="checkbox" value="pets"/><span>Зона для питомцев</span></label><label class="choice"><input name="needs" type="checkbox" value="custom"/><span>Нестандартная мебель</span></label><label class="choice"><input name="furniture_features" type="checkbox" value="Ножки"/><span>Ножки</span></label><label class="choice"><input name="furniture_features" type="checkbox" value="Доводчики (без ручек)"/><span>Доводчики (без ручек)</span></label></div>
+<h3>Техника дома</h3><div class="checkgrid"><label class="choice"><input name="home_tech" type="checkbox" value="Кондиционер"/><span>Кондиционер</span></label><label class="choice"><input name="home_tech" type="checkbox" value="Очиститель воздуха"/><span>Очиститель воздуха</span></label><label class="choice"><input name="home_tech" type="checkbox" value="Робот-пылесос"/><span>Робот-пылесос</span></label><label class="choice"><input name="home_tech" type="checkbox" value="ТВ"/><span>ТВ</span></label><label class="choice"><input name="home_tech" type="checkbox" value="Умная колонка"/><span>Умная колонка</span></label><label class="choice"><input name="home_tech" type="checkbox" value="Звуковая система"/><span>Звуковая система</span></label><label class="choice"><input name="home_tech" type="checkbox" value="Компьютер"/><span>Компьютер</span></label><label class="choice"><input name="home_tech" type="checkbox" value="Ноутбук"/><span>Ноутбук</span></label></div><div><label>ТВ — сколько и в какой комнате?</label><textarea name="tv_details" placeholder="Например: 1 ТВ в гостиной, 1 ТВ в спальне..."></textarea></div></div>
 <div class="card">
 <h2>5. Кухня</h2>
 <div class="grid">
 <div><label>Предпочтительная форма</label><select name="kitchen_shape"><option></option><option>Прямая</option><option>Г-образная</option><option>П-образная</option><option>С островом</option><option>Не знаю — предложить решение</option></select></div>
-<div><label>Нужна ли высокая колонна?</label><select name="kitchen_tall"><option></option><option>Да</option><option>Нет</option><option>Предложить вариант</option></select></div>
+<div><label>Минимальный зазор до полка?</label><select name="kitchen_shelf_gap"><option></option><option>Да</option><option>Нет</option><option>Предложить вариант</option></select></div>
 </div>
-<label style="margin-top:14px">Техника</label>
-<textarea name="appliances" placeholder="Холодильник, духовой шкаф, СВЧ, посудомойка, вытяжка и т. д."></textarea>
-</div>
+<h3>Техника</h3><h3>Холодильник</h3><div class="checkgrid"><label class="choice"><input name="kitchen_fridge" type="radio" value="Встроенный"/><span>Встроенный</span></label><label class="choice"><input name="kitchen_fridge" type="radio" value="Отдельностоящий"/><span>Отдельностоящий</span></label></div><h3>Вытяжка</h3><div class="checkgrid"><label class="choice"><input name="kitchen_hood" type="radio" value="Встроенная"/><span>Встроенная</span></label><label class="choice"><input name="kitchen_hood" type="radio" value="Отдельная"/><span>Отдельная</span></label></div><h3>Варочная панель</h3><div class="checkgrid"><label class="choice"><input name="kitchen_hob" type="radio" value="Индукция"/><span>Индукция</span></label><label class="choice"><input name="kitchen_hob" type="radio" value="Электрическая"/><span>Электрическая</span></label><label class="choice"><input name="kitchen_hob" type="radio" value="Газ"/><span>Газ</span></label></div><h3>СВЧ</h3><div class="checkgrid"><label class="choice"><input name="kitchen_microwave" type="radio" value="Встроенная"/><span>Встроенная</span></label><label class="choice"><input name="kitchen_microwave" type="radio" value="Отдельная"/><span>Отдельная</span></label></div><div class="choice-block"><h3>Посудомоечная машина</h3><div class="checkgrid"><label class="choice"><input name="kitchen_dishwasher" type="radio" value="45 см"/><span>45 см</span></label><label class="choice"><input name="kitchen_dishwasher" type="radio" value="60 см"/><span>60 см</span></label></div></div><div class="choice-block"><h3>Духовой шкаф</h3><div class="checkgrid"><label class="choice"><input name="kitchen_oven_size" type="radio" value="45 см"/><span>45 см</span></label><label class="choice"><input name="kitchen_oven_size" type="radio" value="60 см"/><span>60 см</span></label></div></div><h3>Дополнительная техника</h3><div class="checkgrid"><label class="choice"><input name="kitchen_appliances" type="checkbox" value="Измельчитель отходов"/><span>Измельчитель отходов</span></label><label class="choice"><input name="kitchen_appliances" type="checkbox" value="Кофемашина"/><span>Кофемашина</span></label><label class="choice"><input name="kitchen_appliances" type="checkbox" value="Чайник"/><span>Чайник</span></label><label class="choice"><input name="kitchen_appliances" type="checkbox" value="Мультиварка"/><span>Мультиварка</span></label></div><div><label>Особые пожелания по технике</label><textarea name="kitchen_appliance_wishes" placeholder="Например: марки техники, размеры, дополнительные требования..."></textarea></div><h3>Столешница</h3><div class="checkgrid"><label class="choice"><input name="kitchen_countertop" type="radio" value="ЛДСП"/><span>ЛДСП</span></label><label class="choice"><input name="kitchen_countertop" type="radio" value="Камень"/><span>Камень</span></label><label class="choice"><input name="kitchen_countertop" type="radio" value="Массив"/><span>Массив</span></label></div><h3>Раковина</h3><div class="checkgrid"><label class="choice"><input name="kitchen_sink" type="radio" value="Накладная"/><span>Накладная</span></label><label class="choice"><input name="kitchen_sink" type="radio" value="Подстольный монтаж"/><span>Подстольный монтаж</span></label><label class="choice"><input name="kitchen_sink" type="radio" value="В 1 уровень со столешницей"/><span>В 1 уровень со столешницей</span></label></div><h3>Подсветка рабочей зоны</h3><div class="checkgrid"><label class="choice"><input name="kitchen_worklight" type="radio" value="Да"/><span>Да</span></label><label class="choice"><input name="kitchen_worklight" type="radio" value="Нет"/><span>Нет</span></label></div><h3>Витрина</h3><div class="checkgrid"><label class="choice"><input name="kitchen_showcase" type="radio" value="Да"/><span>Да</span></label><label class="choice"><input name="kitchen_showcase" type="radio" value="Нет"/><span>Нет</span></label></div></div>
 <div class="card">
-<h2>Ванная</h2>
-<p class="hint">Отметьте всё, что планируется предусмотреть в ванной комнате.</p>
+<h2>Санузел</h2>
+<p class="hint">Отметьте всё, что планируется предусмотреть в санузле.</p>
 <div class="checkgrid">
-<label><input name="bathroom_options" type="checkbox" value="Подвесная инсталляция"/> Подвесная инсталляция</label>
-<label><input name="bathroom_options" type="checkbox" value="Ванна"/> Ванна</label>
-<label><input name="bathroom_options" type="checkbox" value="Душевая кабина"/> Душевая кабина</label>
-<label><input name="bathroom_options" type="checkbox" value="Скрытый короб"/> Скрытый короб</label>
-<label><input name="bathroom_options" type="checkbox" value="Гигиенический душ"/> Гигиенический душ</label>
-</div>
+<label class="choice"><input name="bathroom_options" type="checkbox" value="Инсталляция подвесная"/><span>Инсталляция подвесная</span></label><label class="choice"><input name="bathroom_options" type="checkbox" value="Туалет отдельностоящий"/><span>Туалет отдельностоящий</span></label><label class="choice"><input name="bathroom_options" type="checkbox" value="Бойлер"/><span>Бойлер</span></label><label class="choice"><input name="bathroom_options" type="checkbox" value="Стиральная машина"/><span>Стиральная машина</span></label><label class="choice"><input name="bathroom_options" type="checkbox" value="Сушильная машина"/><span>Сушильная машина</span></label><label class="choice"><input name="bathroom_options" type="checkbox" value="Ванна"/><span>Ванна</span></label><label class="choice"><input name="bathroom_options" type="checkbox" value="Душевая кабина"/><span>Душевая кабина</span></label><label class="choice"><input name="bathroom_options" type="checkbox" value="Скрытый короб"/><span>Скрытый короб</span></label><label class="choice"><input name="bathroom_options" type="checkbox" value="Гигиенический душ"/><span>Гигиенический душ</span></label></div>
 <div class="grid">
 <div style="grid-column:1/-1">
-<label>Отдельные пожелания по ванной</label>
+<label>Отдельные пожелания по санузлу</label>
 <textarea name="bathroom_wishes" placeholder="Например: ниша для косметики, большое зеркало, полотенцесушитель, хранение, стиральная машина, особые требования к плитке..." rows="5"></textarea>
 </div>
 </div>
 </div>
-
 <div class="card">
 <h2>7. Освещение и коммуникации</h2>
 <div class="checkgrid">
@@ -281,7 +256,6 @@ footer{color:var(--muted);font-size:12px;text-align:center;margin-top:18px}
 </div>
 <label style="margin-top:14px">Пожелания по розеткам, выключателям, сантехнике и другим выводам</label>
 <textarea name="utilities" placeholder="Например: розетка у зеркала, вывод под ТВ, интернет, фильтр воды..."></textarea>
-
 <div class="field-block communication-extra">
 <h3>Коммуникации и инженерные решения</h3>
 <p class="hint">Если решение ещё не принято — выберите «Не знаю» или «Не определились». Это поможет учесть вопросы на этапе дизайн-проекта.</p>
@@ -341,7 +315,7 @@ footer{color:var(--muted);font-size:12px;text-align:center;margin-top:18px}
 </div>
 <div class="card">
 <h2>10. Финальные пожелания</h2>
-<textarea name="final" placeholder="Всё, что дизайнеру важно знать перед началом работы..."></textarea>
+<textarea name="final" placeholder="Всё, что Ангелина должна знать перед началом работы..."></textarea>
 <div class="notice" style="margin-top:14px">После заполнения нажмите «Предпросмотр», проверьте ответы и затем «Отправить дизайнеру». На почту придёт письмо на русском языке с PDF-файлом брифа.</div>
 <div class="actions">
 <button class="btn" onclick="submitBrief()" type="button">Отправить дизайнеру</button>
@@ -372,7 +346,6 @@ footer{color:var(--muted);font-size:12px;text-align:center;margin-top:18px}
 <button class="btn" onclick="closeSuccessModal()" type="button">Заполнить новый бриф</button>
 </div>
 </div>
-
 <div id="pdfSheet" style="position:absolute;left:-100000px;top:0;">
 <div class="pdf-title">Бриф: Дом мечты</div>
 <div class="pdf-subtitle">Ответы заказчика · дизайн-проект 1 этажа · площадь около 40,9 м²</div>
