@@ -21,6 +21,19 @@ label{display:block;font-weight:600;margin-bottom:6px} input,select,textarea{wid
 .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}.notice{background:#f0eee9;border-radius:12px;padding:12px 14px;color:#5f5b55;font-size:13px}
 .service{border:1px solid var(--line);border-radius:14px;padding:15px;margin:9px 0}.service strong{display:block;margin-bottom:7px}
 footer{color:var(--muted);font-size:12px;text-align:center;margin-top:18px}
+.preview{display:none}
+.preview-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}
+.preview-title{margin:0}
+.answer-card{border:1px solid var(--line);border-radius:14px;padding:16px;margin:12px 0;background:#fff}
+.answer-card h3{margin:0 0 12px;font-size:16px}
+.answer-row{display:grid;grid-template-columns:minmax(180px,34%) 1fr;gap:14px;padding:10px 0;border-top:1px solid var(--soft)}
+.answer-row:first-child{border-top:0;padding-top:0}
+.answer-label{font-weight:600;color:var(--muted)}
+.answer-value{white-space:pre-wrap}
+.empty{color:var(--muted);font-style:italic}
+.contact{margin-left:auto}
+@media(max-width:650px){.answer-row{grid-template-columns:1fr;gap:4px}.preview-head{align-items:flex-start;flex-direction:column}.contact{margin-left:0}}
+
 </style>
 </head>
 <body>
@@ -28,7 +41,7 @@ footer{color:var(--muted);font-size:12px;text-align:center;margin-top:18px}
 <section class="hero">
 <h1>Дом семьи Лобурь</h1>
 <p>Бриф на дизайн-проект · 1 этаж · 6,125 × 6,677 м · ≈ 40,9 м²</p>
-<div class="progress"><div class="bar" id="bar"></div></div>
+<div class="progress"><div class="bar" id="bar"></div></div><div class="actions"><a class="btn contact" href="https://max.ru/u/f9LHodD0cOLwZFEDhX0K3_r5JFOsJvkSpMO6MNReC4KBSv2TttwNzRMCwb0" target="_blank" rel="noopener noreferrer" style="text-decoration:none">Связаться</a></div>
 </section>
 
 <form id="brief" action="https://formsubmit.co/yatmankina.angelina@mail.ru" method="POST">
@@ -164,6 +177,21 @@ footer{color:var(--muted);font-size:12px;text-align:center;margin-top:18px}
 </div>
 </div>
 </form>
+
+<section class="preview" id="preview">
+  <div class="preview-head">
+    <div>
+      <h2 class="preview-title">Предпросмотр брифа</h2>
+      <div class="hint">Проверьте ответы перед отправкой дизайнеру.</div>
+    </div>
+    <a class="btn secondary" href="https://max.ru/u/f9LHodD0cOLwZFEDhX0K3_r5JFOsJvkSpMO6MNReC4KBSv2TttwNzRMCwb0" target="_blank" rel="noopener noreferrer" style="text-decoration:none">Связаться</a>
+  </div>
+  <div id="previewContent"></div>
+  <div class="actions">
+    <button class="btn secondary" type="button" onclick="backToForm()">← Назад к анкете</button>
+    <button class="btn" type="button" onclick="submitBrief()">Отправить дизайнеру</button>
+  </div>
+</section>
 <footer>Дом семьи Лобурь · дизайн-проект 1 этажа · площадь около 40,9 м² · yatmankina.angelina@mail.ru</footer>
 </div>
 <script>
@@ -177,13 +205,69 @@ function submitBrief(){
   form.submit();
 }
 function makeBrief(){
- const data=new FormData(form); let out=[];
- const labels={name:'Имя',phone:'Телефон',email:'Email',family:'Состав семьи',users:'Кто пользуется домом',people:'Проживающих',rooms:'Комнат',layout_notes:'Пожелания по планировке',palette:'Палитра',materials:'Материалы',refs:'Референсы',existing:'Что сохранить',buy:'Что купить',kitchen_shape:'Форма кухни',kitchen_tall:'Высокая колонна',appliances:'Техника',utilities:'Коммуникации и выводы',floor:'Пол',walls:'Стены',ceiling:'Потолок',doors:'Двери',tile:'Плитка',priority:'Приоритеты',budget:'Бюджет',final:'Финальные пожелания'};
- for(const [k,v] of data.entries()) if(v && !['spaces','style','needs','light'].includes(k)) out.push((labels[k]||k)+': '+v);
- const groups=[['spaces','Обязательные помещения'],['style','Стиль'],['needs','Особые требования'],['light','Освещение']];
- for(const [key,title] of groups){const vals=[...form.querySelectorAll(`input[name="${key}"]:checked`)].map(x=>x.parentElement.innerText.trim());if(vals.length)out.push(title+': '+vals.join(', '))}
- const text='БРИФ НА ДИЗАЙН-ПРОЕКТ — 1 ЭТАЖ\\nДом: 6,125 × 6,677 м, ≈40,9 м²\\n\\n'+out.join('\\n');
- const w=window.open('','_blank');w.document.write('<pre style="white-space:pre-wrap;font:15px Arial;padding:30px;max-width:800px;margin:auto">'+text.replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]))+'</pre>');w.document.close();
+  const sections=[...form.querySelectorAll('.card')];
+  const preview=document.getElementById('preview');
+  const content=document.getElementById('previewContent');
+  content.innerHTML='';
+
+  sections.forEach(section=>{
+    const title=section.querySelector('h2')?.innerText.trim() || 'Раздел';
+    const card=document.createElement('div');
+    card.className='answer-card';
+    const h=document.createElement('h3');
+    h.textContent=title;
+    card.appendChild(h);
+
+    const fields=[...section.querySelectorAll('input[name],select[name],textarea[name]')];
+    const used=new Set();
+
+    fields.forEach(el=>{
+      if(used.has(el.name) || el.type==='hidden' || el.type==='button' || el.type==='submit') return;
+
+      let value='';
+      let label='';
+
+      if(el.type==='checkbox' || el.type==='radio'){
+        const checked=[...section.querySelectorAll(`input[name="${CSS.escape(el.name)}"]:checked`)];
+        if(!checked.length){ used.add(el.name); return; }
+        value=checked.map(x=>x.parentElement?.innerText.trim() || x.value).join(', ');
+        label=checked.length>1 ? (el.closest('.checkgrid')?.previousElementSibling?.innerText.trim() || 'Выбранные варианты') : (el.parentElement?.innerText.trim() || el.name);
+      } else {
+        value=el.value.trim();
+        const l=section.querySelector(`label[for="${CSS.escape(el.id)}"]`);
+        label=l?.innerText.trim() || el.closest('div')?.querySelector('label')?.innerText.trim() || el.name;
+      }
+
+      used.add(el.name);
+      if(!value) value='Не заполнено';
+
+      const row=document.createElement('div');
+      row.className='answer-row';
+
+      const lab=document.createElement('div');
+      lab.className='answer-label';
+      lab.textContent=label;
+
+      const val=document.createElement('div');
+      val.className=value==='Не заполнено'?'answer-value empty':'answer-value';
+      val.textContent=value;
+
+      row.append(lab,val);
+      card.appendChild(row);
+    });
+
+    content.appendChild(card);
+  });
+
+  form.style.display='none';
+  preview.style.display='block';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function backToForm(){
+  document.getElementById('preview').style.display='none';
+  form.style.display='block';
+  window.scrollTo({top:0,behavior:'smooth'});
 }
 </script>
 </body></html>
