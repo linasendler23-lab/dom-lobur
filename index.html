@@ -449,114 +449,151 @@ function makeBrief(){
   renderAnswers();
   document.getElementById('preview').style.display='block';
   form.style.display='none';
-  window.scrollTo({top:0,behavior:'smooth'});
+  document.getElementById('preview').scrollIntoView({behavior:'smooth', block:'start'});
 }
 function backToForm(){
   document.getElementById('preview').style.display='none';
   form.style.display='block';
-  window.scrollTo({top:0,behavior:'smooth'});
+  form.scrollIntoView({behavior:'smooth', block:'start'});
 }
 
-async function buildPdfFile(){
-  if(typeof html2pdf==='undefined') throw new Error('PDF-библиотека не загрузилась.');
-  const data=renderAnswers();
-  if(!data.length||!data.some(s=>s.rows.length)) throw new Error('Не удалось собрать ответы формы.');
 
-  const name=(form.querySelector('[name="client_name"]')?.value||'').trim();
-  const safe=name?name.replace(/[^\p{L}\p{N}_-]+/gu,'_').slice(0,50):'заказчик';
-  const opt={
-    margin:[10,8,10,8],
-    filename:`Дом_мечты_${safe}.pdf`,
-    image:{type:'jpeg',quality:0.86},
-    html2canvas:{scale:1.5,useCORS:true,backgroundColor:'#ffffff',logging:false},
-    jsPDF:{unit:'mm',format:'a4',orientation:'portrait'},
-    pagebreak:{mode:['css','legacy']}
-  };
-  const blob=await html2pdf().set(opt).from(document.getElementById('pdfSheet')).outputPdf('blob');
-  if(!blob||blob.size<1000) throw new Error('PDF получился пустым.');
-  return {blob,filename:opt.filename};
+function escapeHtml(value){
+  return String(value ?? '').replace(/[&<>"']/g, ch => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  }[ch]));
+}
+
+function answersToRussianHtml(data){
+  let rows = '';
+  data.forEach(section=>{
+    rows += `
+      <tr>
+        <td colspan="2" style="padding:14px 12px;background:#f1eee9;border:1px solid #ddd7cf;font-weight:700;font-size:16px;">
+          ${escapeHtml(section.title)}
+        </td>
+      </tr>`;
+    section.rows.forEach(row=>{
+      const value = escapeHtml(row.value).replace(/\n/g,'<br>');
+      rows += `
+        <tr>
+          <td style="width:38%;padding:10px 12px;border:1px solid #ddd7cf;vertical-align:top;font-weight:600;">
+            ${escapeHtml(row.label)}
+          </td>
+          <td style="padding:10px 12px;border:1px solid #ddd7cf;vertical-align:top;">
+            ${value || '—'}
+          </td>
+        </tr>`;
+    });
+  });
+
+  return `
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%;border-collapse:collapse;font-family:Arial,sans-serif;font-size:14px;line-height:1.45;color:#242321;">
+  <tr>
+    <td colspan="2" style="padding:18px 12px;background:#242321;color:#ffffff;font-size:20px;font-weight:700;">
+      БРИФ «ДОМ МЕЧТЫ»
+    </td>
+  </tr>
+  ${rows}
+</table>`;
+}
+
+function makeBrief(){
+  renderAnswers();
+  document.getElementById('preview').style.display='block';
+  form.style.display='none';
+  document.getElementById('preview').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function backToForm(){
+  document.getElementById('preview').style.display='none';
+  form.style.display='block';
+  form.scrollIntoView({behavior:'smooth', block:'start'});
 }
 
 function setSubmitButtonsDisabled(disabled){
   document.querySelectorAll('button[onclick*="submitBrief"]').forEach(btn=>{
-    btn.disabled=disabled; btn.style.opacity=disabled?'0.6':'1'; btn.style.pointerEvents=disabled?'none':'auto';
+    btn.disabled=disabled;
+    btn.style.opacity=disabled?'0.6':'1';
+    btn.style.pointerEvents=disabled?'none':'auto';
   });
 }
+
 function showSuccessModal(){
   const modal=document.getElementById('successModal');
   if(modal){
     const p=modal.querySelector('p');
-    if(p) p.innerHTML='Бриф «Дом мечты» успешно отправлен дизайнеру.<br>PDF прикреплён к письму. Анкета очищена и готова для нового заполнения.';
-    modal.style.display='flex'; document.body.style.overflow='hidden';
+    if(p) p.innerHTML='Бриф «Дом мечты» успешно отправлен дизайнеру.<br>Письмо содержит заполненный бриф в виде таблицы. Анкета очищена и готова для нового заполнения.';
+    modal.style.display='flex';
+    document.body.style.overflow='hidden';
   }
 }
+
 function closeSuccessModal(){
   const modal=document.getElementById('successModal');
   if(modal) modal.style.display='none';
   document.body.style.overflow='';
   form.style.display='block';
-  window.scrollTo({top:0,behavior:'smooth'});
+  form.scrollIntoView({behavior:'smooth', block:'start'});
 }
+
 function clearFormForNextBrief(){
-  form.reset(); update(); renderAnswers(); backToForm();
+  form.reset();
+  update();
+  renderAnswers();
+  document.getElementById('preview').style.display='none';
 }
 
 async function submitBrief(){
   if(isSubmitting) return;
-  isSubmitting=true; setSubmitButtonsDisabled(true);
+  isSubmitting=true;
+  setSubmitButtonsDisabled(true);
 
-  let sendForm=null;
   try{
     if(!window.emailjs) throw new Error('EmailJS не загрузился. Проверьте интернет-соединение.');
 
     const required=[...form.querySelectorAll('input,select,textarea')].filter(e=>e.required);
-    if(required.some(e=>e.type==='checkbox'||e.type==='radio'?!e.checked:!String(e.value||'').trim())){
+    if(required.some(e=>e.type==='checkbox'||e.type==='radio'
+      ? !e.checked
+      : !String(e.value||'').trim())){
       throw new Error('Пожалуйста, заполните обязательные поля.');
     }
 
-    // Жёсткий порядок: данные -> русский текст -> PDF -> проверка -> EmailJS.
     const data=renderAnswers();
     const russianText=answersToRussianText(data);
-    if(russianText.length<50||!russianText.includes('ОТВЕТЫ ЗАКАЗЧИКА')){
-      throw new Error('Не удалось сформировать русский текст письма.');
+    const briefHtml=answersToRussianHtml(data);
+
+    if(russianText.length<50 || !russianText.includes('ОТВЕТЫ ЗАКАЗЧИКА')){
+      throw new Error('Не удалось сформировать русский текст брифа.');
     }
 
-    const pdf=await buildPdfFile();
-    if(!pdf.blob||pdf.blob.size<1000) throw new Error('Не удалось сформировать PDF.');
-
-    sendForm=document.createElement('form');
-    sendForm.enctype='multipart/form-data';
-    sendForm.style.display='none';
-
-    const hidden=(name,value)=>{
-      const input=document.createElement('input');
-      input.type='hidden'; input.name=name; input.value=value; sendForm.appendChild(input);
+    const templateParams={
+      client_name: form.querySelector('[name="client_name"]')?.value || '',
+      email: form.querySelector('[name="email"]')?.value || '',
+      phone: form.querySelector('[name="phone"]')?.value || '',
+      subject: 'Дом мечты — заполненный бриф',
+      brief_text: russianText,
+      message: russianText,
+      brief_html: briefHtml
     };
-    hidden('client_name',form.querySelector('[name="client_name"]')?.value||'');
-    hidden('email',form.querySelector('[name="email"]')?.value||'');
-    hidden('phone',form.querySelector('[name="phone"]')?.value||'');
-    hidden('subject','Дом мечты — заполненный бриф');
-    hidden('brief_text',russianText);
-    hidden('message',russianText);
 
-    const fileInput=document.createElement('input');
-    fileInput.type='file'; fileInput.name=EMAILJS_PDF_FIELD;
-    const file=new File([pdf.blob],pdf.filename,{type:'application/pdf'});
-    const dt=new DataTransfer(); dt.items.add(file); fileInput.files=dt.files;
-    sendForm.appendChild(fileInput);
-    document.body.appendChild(sendForm);
+    // Отправляем только текстовые данные. PDF и вложения больше не используются.
+    await emailjs.send(
+      EMAILJS_SERVICE_ID,
+      EMAILJS_TEMPLATE_ID,
+      templateParams,
+      {publicKey:EMAILJS_PUBLIC_KEY}
+    );
 
-    await emailjs.sendForm(EMAILJS_SERVICE_ID,EMAILJS_TEMPLATE_ID,sendForm,{publicKey:EMAILJS_PUBLIC_KEY});
-
-    sendForm.remove(); sendForm=null;
     clearFormForNextBrief();
     showSuccessModal();
+
   }catch(error){
-    if(sendForm?.parentNode) sendForm.remove();
     console.error('EmailJS submission error:',error);
     alert('Бриф не отправлен.\n\n'+(error?.text||error?.message||'Проверьте настройки EmailJS и попробуйте ещё раз.'));
   }finally{
-    isSubmitting=false; setSubmitButtonsDisabled(false);
+    isSubmitting=false;
+    setSubmitButtonsDisabled(false);
   }
 }
 
