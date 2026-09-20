@@ -1,8 +1,9 @@
-<!doctype html>
+<!DOCTYPE html>
+
 <html lang="ru">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
 <title>Дом семьи Лобурь — бриф на дизайн-проект</title>
 <style>
 :root{--bg:#f5f3ef;--card:#fff;--ink:#242321;--muted:#77736d;--line:#ded9d1;--accent:#272522;--soft:#eeeae4}
@@ -35,73 +36,138 @@ footer{color:var(--muted);font-size:12px;text-align:center;margin-top:18px}
 @media(max-width:650px){.answer-row{grid-template-columns:1fr;gap:4px}.preview-head{align-items:flex-start;flex-direction:column}.contact{margin-left:0}}
 
 </style>
-</head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script><style>
+/* PDF / print version */
+#pdfSheet{
+  width: 794px;
+  box-sizing:border-box;
+  padding: 28px 34px 40px;
+  background:#fff;
+  color:var(--ink);
+  font-family:inherit;
+}
+#pdfSheet .pdf-title{
+  margin:0 0 5px;
+  font-size:28px;
+  line-height:1.15;
+}
+#pdfSheet .pdf-subtitle{
+  margin:0 0 22px;
+  color:var(--muted);
+  font-size:13px;
+}
+#pdfSheet .answer-card{
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:24px;
+  margin:0 0 14px;
+  background:var(--card);
+  break-inside:avoid;
+  page-break-inside:avoid;
+}
+#pdfSheet .answer-card h3{
+  margin:0 0 17px;
+  font-size:20px;
+  color:var(--ink);
+}
+#pdfSheet .answer-row{
+  display:grid;
+  grid-template-columns:minmax(220px,34%) 1fr;
+  gap:14px;
+  padding:11px 0;
+  border-top:1px solid var(--soft);
+  break-inside:avoid;
+  page-break-inside:avoid;
+}
+#pdfSheet .answer-row:first-of-type{
+  border-top:0;
+  padding-top:0;
+}
+#pdfSheet .answer-label{
+  font-weight:600;
+  color:var(--ink);
+}
+#pdfSheet .answer-value{
+  white-space:pre-wrap;
+  line-height:1.45;
+}
+#pdfSheet .empty{
+  color:var(--muted);
+  font-style:italic;
+}
+#pdfSheet .pdf-footer{
+  margin-top:18px;
+  padding-top:12px;
+  border-top:1px solid var(--line);
+  color:var(--muted);
+  font-size:11px;
+}
+@media print{
+  #pdfSheet{width:auto;padding:0}
+  .pdf-no-print{display:none!important}
+}
+</style></head>
 <body>
 <div class="wrap">
 <section class="hero">
 <h1>Дом семьи Лобурь</h1>
 <p>Бриф на дизайн-проект · 1 этаж · 6,125 × 6,677 м · ≈ 40,9 м²</p>
-<div class="progress"><div class="bar" id="bar"></div></div><div class="actions"><a class="btn contact" href="https://max.ru/u/f9LHodD0cOLwZFEDhX0K3_r5JFOsJvkSpMO6MNReC4KBSv2TttwNzRMCwb0" target="_blank" rel="noopener noreferrer" style="text-decoration:none">Связаться</a></div>
+<div class="progress"><div class="bar" id="bar"></div></div><div class="actions"><a class="btn contact" href="https://max.ru/u/f9LHodD0cOLwZFEDhX0K3_r5JFOsJvkSpMO6MNReC4KBSv2TttwNzRMCwb0" rel="noopener noreferrer" style="text-decoration:none" target="_blank">Связаться</a></div>
 </section>
-
-<form id="brief" action="https://formsubmit.co/yatmankina.angelina@mail.ru" method="POST">
-<input type="hidden" name="_subject" value="Бриф: Дом семьи Лобурь">
-<input type="hidden" name="_captcha" value="false">
-<input type="hidden" name="_template" value="table">
-<input type="hidden" name="_next" value="">
-
+<form action="https://formsubmit.co/yatmankina.angelina@mail.ru" id="brief" method="POST">
+<input name="_subject" type="hidden" value="Бриф: Дом семьи Лобурь"/>
+<input name="_captcha" type="hidden" value="false"/>
+<input name="_template" type="hidden" value="basic"/>
+<input name="_next" type="hidden" value="https://linasendler23-lab.github.io/dom-lobur/?sent=1"/>
 <div class="card">
 <h2>1. Данные заказчика</h2>
 <div class="grid">
-<div><label>Имя</label><input name="name" placeholder="Как к вам обращаться"></div>
-<div><label>Телефон / мессенджер</label><input name="phone" placeholder="+7 ..."></div>
-<div><label>Email</label><input type="email" name="email" placeholder="example@mail.ru"></div>
-<div><label>Состав семьи</label><input name="family" placeholder="Например: 2 взрослых, ребёнок"></div>
+<div><label>Имя</label><input name="name" placeholder="Как к вам обращаться"/></div>
+<div><label>Телефон / мессенджер</label><input name="phone" placeholder="+7 ..."/></div>
+<div><label>Email</label><input name="email" placeholder="example@mail.ru" type="email"/></div>
+<div><label>Состав семьи</label><input name="family" placeholder="Например: 2 взрослых, ребёнок"/></div>
 </div>
 <h3>Кто будет пользоваться домом?</h3>
 <textarea name="users" placeholder="Постоянное или сезонное проживание, гости, дети, животные и т. д."></textarea>
 </div>
-
 <div class="card">
 <h2>2. Планировочное решение</h2>
 <div class="grid">
-<div><label>Количество проживающих</label><input name="people" type="number" min="1"></div>
-<div><label>Желаемое количество комнат</label><input name="rooms" type="number" min="1"></div>
+<div><label>Количество проживающих</label><input min="1" name="people" type="number"/></div>
+<div><label>Желаемое количество комнат</label><input min="1" name="rooms" type="number"/></div>
 </div>
 <h3>Что обязательно должно быть на 1 этаже?</h3>
 <div class="checkgrid">
-<label class="choice"><input type="checkbox" name="spaces" value="kitchen"><span>Кухня</span></label>
-<label class="choice"><input type="checkbox" name="spaces" value="living"><span>Гостиная</span></label>
-<label class="choice"><input type="checkbox" name="spaces" value="bedroom"><span>Спальня</span></label>
-<label class="choice"><input type="checkbox" name="spaces" value="bath"><span>Санузел</span></label>
-<label class="choice"><input type="checkbox" name="spaces" value="storage"><span>Кладовая / хранение</span></label>
-<label class="choice"><input type="checkbox" name="spaces" value="laundry"><span>Постирочная</span></label>
-<label class="choice"><input type="checkbox" name="spaces" value="hall"><span>Прихожая</span></label>
-<label class="choice"><input type="checkbox" name="spaces" value="other"><span>Другое</span></label>
+<label class="choice"><input name="spaces" type="checkbox" value="kitchen"/><span>Кухня</span></label>
+<label class="choice"><input name="spaces" type="checkbox" value="living"/><span>Гостиная</span></label>
+<label class="choice"><input name="spaces" type="checkbox" value="bedroom"/><span>Спальня</span></label>
+<label class="choice"><input name="spaces" type="checkbox" value="bath"/><span>Санузел</span></label>
+<label class="choice"><input name="spaces" type="checkbox" value="storage"/><span>Кладовая / хранение</span></label>
+<label class="choice"><input name="spaces" type="checkbox" value="laundry"/><span>Постирочная</span></label>
+<label class="choice"><input name="spaces" type="checkbox" value="hall"/><span>Прихожая</span></label>
+<label class="choice"><input name="spaces" type="checkbox" value="other"/><span>Другое</span></label>
 </div>
 <label style="margin-top:16px">Что сейчас неудобно или что обязательно нужно изменить?</label>
 <textarea name="layout_notes" placeholder="Например: больше хранения, отдельный санузел, не проходная спальня..."></textarea>
 </div>
-
 <div class="card">
 <h2>3. Стиль и атмосфера</h2>
 <label>Какой стиль вам нравится?</label>
 <div class="checkgrid">
-<label class="choice"><input type="checkbox" name="style" value="modern"><span>Современный</span></label>
-<label class="choice"><input type="checkbox" name="style" value="minimal"><span>Минимализм</span></label>
-<label class="choice"><input type="checkbox" name="style" value="scandi"><span>Скандинавский</span></label>
-<label class="choice"><input type="checkbox" name="style" value="classic"><span>Современная классика</span></label>
-<label class="choice"><input type="checkbox" name="style" value="loft"><span>Лофт</span></label>
-<label class="choice"><input type="checkbox" name="style" value="other"><span>Другое</span></label>
+<label class="choice"><input name="style" type="checkbox" value="modern"/><span>Современный</span></label>
+<label class="choice"><input name="style" type="checkbox" value="minimal"/><span>Минимализм</span></label>
+<label class="choice"><input name="style" type="checkbox" value="scandi"/><span>Скандинавский</span></label>
+<label class="choice"><input name="style" type="checkbox" value="classic"/><span>Современная классика</span></label>
+<label class="choice"><input name="style" type="checkbox" value="loft"/><span>Лофт</span></label>
+<label class="choice"><input name="style" type="checkbox" value="other"/><span>Другое</span></label>
 </div>
 <div class="grid" style="margin-top:14px">
-<div><label>Предпочитаемая палитра</label><input name="palette" placeholder="Тёплая, нейтральная, контрастная..."></div>
-<div><label>Материалы</label><input name="materials" placeholder="Дерево, камень, керамогранит..."></div>
+<div><label>Предпочитаемая палитра</label><input name="palette" placeholder="Тёплая, нейтральная, контрастная..."/></div>
+<div><label>Материалы</label><input name="materials" placeholder="Дерево, камень, керамогранит..."/></div>
 </div>
 <label style="margin-top:14px">Ссылки / референсы</label>
 <textarea name="refs" placeholder="Вставьте ссылки на Pinterest, фото, проекты или опишите, что именно нравится."></textarea>
 </div>
-
 <div class="card">
 <h2>4. Функциональность и мебель</h2>
 <div class="grid">
@@ -110,15 +176,14 @@ footer{color:var(--muted);font-size:12px;text-align:center;margin-top:18px}
 </div>
 <h3>Особые требования</h3>
 <div class="checkgrid">
-<label class="choice"><input type="checkbox" name="needs" value="storage"><span>Много хранения</span></label>
-<label class="choice"><input type="checkbox" name="needs" value="work"><span>Рабочее место</span></label>
-<label class="choice"><input type="checkbox" name="needs" value="tv"><span>ТВ-зона</span></label>
-<label class="choice"><input type="checkbox" name="needs" value="kids"><span>Детская зона</span></label>
-<label class="choice"><input type="checkbox" name="needs" value="pets"><span>Зона для питомцев</span></label>
-<label class="choice"><input type="checkbox" name="needs" value="custom"><span>Нестандартная мебель</span></label>
+<label class="choice"><input name="needs" type="checkbox" value="storage"/><span>Много хранения</span></label>
+<label class="choice"><input name="needs" type="checkbox" value="work"/><span>Рабочее место</span></label>
+<label class="choice"><input name="needs" type="checkbox" value="tv"/><span>ТВ-зона</span></label>
+<label class="choice"><input name="needs" type="checkbox" value="kids"/><span>Детская зона</span></label>
+<label class="choice"><input name="needs" type="checkbox" value="pets"/><span>Зона для питомцев</span></label>
+<label class="choice"><input name="needs" type="checkbox" value="custom"/><span>Нестандартная мебель</span></label>
 </div>
 </div>
-
 <div class="card">
 <h2>5. Кухня</h2>
 <div class="grid">
@@ -128,137 +193,217 @@ footer{color:var(--muted);font-size:12px;text-align:center;margin-top:18px}
 <label style="margin-top:14px">Техника</label>
 <textarea name="appliances" placeholder="Холодильник, духовой шкаф, СВЧ, посудомойка, вытяжка и т. д."></textarea>
 </div>
-
 <div class="card">
 <h2>6. Освещение и коммуникации</h2>
 <div class="checkgrid">
-<label class="choice"><input type="checkbox" name="light" value="spots"><span>Точечные светильники</span></label>
-<label class="choice"><input type="checkbox" name="light" value="pendants"><span>Подвесы</span></label>
-<label class="choice"><input type="checkbox" name="light" value="tracks"><span>Трековое освещение</span></label>
-<label class="choice"><input type="checkbox" name="light" value="led"><span>LED-подсветка</span></label>
-<label class="choice"><input type="checkbox" name="light" value="wall"><span>Бра</span></label>
-<label class="choice"><input type="checkbox" name="light" value="decor"><span>Декоративный свет</span></label>
+<label class="choice"><input name="light" type="checkbox" value="spots"/><span>Точечные светильники</span></label>
+<label class="choice"><input name="light" type="checkbox" value="pendants"/><span>Подвесы</span></label>
+<label class="choice"><input name="light" type="checkbox" value="tracks"/><span>Трековое освещение</span></label>
+<label class="choice"><input name="light" type="checkbox" value="led"/><span>LED-подсветка</span></label>
+<label class="choice"><input name="light" type="checkbox" value="wall"/><span>Бра</span></label>
+<label class="choice"><input name="light" type="checkbox" value="decor"/><span>Декоративный свет</span></label>
 </div>
 <label style="margin-top:14px">Пожелания по розеткам, выключателям, сантехнике и другим выводам</label>
 <textarea name="utilities" placeholder="Например: розетка у зеркала, вывод под ТВ, интернет, фильтр воды..."></textarea>
 </div>
-
 <div class="card">
 <h2>7. Отделка</h2>
 <div class="grid">
-<div><label>Пол</label><input name="floor" placeholder="Керамогранит, SPC, паркет..."></div>
-<div><label>Стены</label><input name="walls" placeholder="Краска, обои, панели..."></div>
-<div><label>Потолок</label><input name="ceiling" placeholder="Натяжной, окраска, ГКЛ..."></div>
-<div><label>Двери</label><input name="doors" placeholder="Цвет, стиль, скрытые/обычные..."></div>
+<div><label>Пол</label><input name="floor" placeholder="Керамогранит, SPC, паркет..."/></div>
+<div><label>Стены</label><input name="walls" placeholder="Краска, обои, панели..."/></div>
+<div><label>Потолок</label><input name="ceiling" placeholder="Натяжной, окраска, ГКЛ..."/></div>
+<div><label>Двери</label><input name="doors" placeholder="Цвет, стиль, скрытые/обычные..."/></div>
 </div>
 <label style="margin-top:14px">Особые пожелания по плитке и раскладке</label>
 <textarea name="tile" placeholder="Размер, цвет, рисунок, минимизация подрезки и т. д."></textarea>
 </div>
-
 <div class="card">
 <h2>8. Результат проекта</h2>
 <div class="service"><strong>В проект входит</strong>
-☑ Планировочное решение<br>☑ Стиль и отделочные материалы<br>☑ Проверка соответствия СНиП и ГОСТ<br>☑ Мебель и декор<br>☑ 2D и 3D визуализация<br>☑ Развёртки стен всех помещений<br>☑ Проектирование кухонной мебели<br>☑ Рекомендации по коммуникациям и выводам<br>☑ Схема освещения<br>☑ Развёртка плитки и пола
+☑ Планировочное решение<br/>☑ Стиль и отделочные материалы<br/>☑ Проверка соответствия СНиП и ГОСТ<br/>☑ Мебель и декор<br/>☑ 2D и 3D визуализация<br/>☑ Развёртки стен всех помещений<br/>☑ Проектирование кухонной мебели<br/>☑ Рекомендации по коммуникациям и выводам<br/>☑ Схема освещения<br/>☑ Развёртка плитки и пола
 </div>
 <label>Что для вас особенно важно получить в результате?</label>
 <textarea name="priority" placeholder="Опишите ожидания от проекта своими словами."></textarea>
 <label style="margin-top:14px">Бюджет на реализацию</label>
-<input name="budget" placeholder="Можно указать диапазон">
+<input name="budget" placeholder="Можно указать диапазон"/>
 </div>
-
 <div class="card">
 <h2>9. Финальные пожелания</h2>
 <textarea name="final" placeholder="Всё, что дизайнеру важно знать перед началом работы..."></textarea>
-<div class="notice" style="margin-top:14px">После заполнения нажмите «Отправить бриф дизайнеру» — ответы будут отправлены на yatmankina.angelina@mail.ru. Кнопка «Предпросмотр» покажет собранный текст перед отправкой.</div>
+<div class="notice" style="margin-top:14px">После заполнения нажмите «Предпросмотр», проверьте ответы и затем «Отправить дизайнеру». На почту придёт письмо на русском языке с PDF-файлом брифа.</div>
 <div class="actions">
-<button class="btn" type="button" onclick="submitBrief()">Отправить бриф дизайнеру</button>
-<button class="btn secondary" type="button" onclick="makeBrief()">Предпросмотр</button>
-<button class="btn secondary" type="reset" onclick="setTimeout(update,0)">Очистить</button>
+<button class="btn" onclick="submitBrief()" type="button">Отправить бриф дизайнеру</button>
+<button class="btn secondary" onclick="makeBrief()" type="button">Предпросмотр</button>
+<button class="btn secondary" onclick="setTimeout(update,0)" type="reset">Очистить</button>
 </div>
 </div>
 </form>
-
 <section class="preview" id="preview">
-  <div class="preview-head">
-    <div>
-      <h2 class="preview-title">Предпросмотр брифа</h2>
-      <div class="hint">Проверьте ответы перед отправкой дизайнеру.</div>
-    </div>
-    <a class="btn secondary" href="https://max.ru/u/f9LHodD0cOLwZFEDhX0K3_r5JFOsJvkSpMO6MNReC4KBSv2TttwNzRMCwb0" target="_blank" rel="noopener noreferrer" style="text-decoration:none">Связаться</a>
-  </div>
-  <div id="previewContent"></div>
-  <div class="actions">
-    <button class="btn secondary" type="button" onclick="backToForm()">← Назад к анкете</button>
-    <button class="btn" type="button" onclick="submitBrief()">Отправить дизайнеру</button>
-  </div>
-</section>
+<div class="preview-head">
+<div>
+<h2 class="preview-title">Предпросмотр брифа</h2>
+<div class="hint">Проверьте ответы перед отправкой дизайнеру.</div>
+</div>
+<a class="btn secondary" href="https://max.ru/u/f9LHodD0cOLwZFEDhX0K3_r5JFOsJvkSpMO6MNReC4KBSv2TttwNzRMCwb0" rel="noopener noreferrer" style="text-decoration:none" target="_blank">Связаться</a>
+</div>
+<div id="previewContent"></div>
+<div class="actions">
+<button class="btn secondary" onclick="backToForm()" type="button">← Назад к анкете</button>
+<button class="btn" onclick="submitBrief()" type="button">Отправить дизайнеру</button>
+</div>
+</section><div id="pdfSheet" style="position:absolute;left:-100000px;top:0;">
+<div class="pdf-title">Бриф: Дом семьи Лобурь</div>
+<div class="pdf-subtitle">Ответы заказчика · дизайн-проект 1 этажа · площадь около 40,9 м²</div>
+<div id="pdfContent"></div>
+<div class="pdf-footer">Сформировано с сайта «Дом семьи Лобурь»</div>
+</div>
 <footer>Дом семьи Лобурь · дизайн-проект 1 этажа · площадь около 40,9 м² · yatmankina.angelina@mail.ru</footer>
 </div>
 <script>
-const form=document.getElementById('brief'), bar=document.getElementById('bar');
-function update(){const els=[...form.querySelectorAll('input,select,textarea')];let filled=els.filter(e=>e.type==='checkbox'?e.checked:e.value.trim()).length;bar.style.width=Math.round(filled/els.length*100)+'%'}
-form.addEventListener('input',update);form.addEventListener('change',update);update();
-function submitBrief(){
-  const required = [...form.querySelectorAll('input,select,textarea')].filter(e => e.required);
-  if (required.some(e => !e.value.trim())) { alert('Пожалуйста, заполните обязательные поля.'); return; }
-  if (!confirm('Отправить заполненный бриф на yatmankina.angelina@mail.ru?')) return;
-  form.submit();
+const form=document.getElementById('brief');
+const bar=document.getElementById('bar');
+let isSubmitting=false;
+
+function update(){
+  const els=[...form.querySelectorAll('input,select,textarea')].filter(e=>e.type!=='hidden');
+  const filled=els.filter(e=>e.type==='checkbox'?e.checked:e.value.trim()).length;
+  bar.style.width=Math.round(filled/Math.max(els.length,1)*100)+'%';
 }
-function makeBrief(){
+form.addEventListener('input',update);
+form.addEventListener('change',update);
+update();
+
+function fieldLabel(el, section){
+  if(el.type==='checkbox' || el.type==='radio'){
+    const grid=el.closest('.checkgrid');
+    const heading=grid?.previousElementSibling;
+    if(heading) return heading.innerText.trim();
+    return el.parentElement?.innerText.trim() || 'Выбранные варианты';
+  }
+
+  const directLabel=el.previousElementSibling?.tagName==='LABEL'
+    ? el.previousElementSibling.innerText.trim()
+    : '';
+  if(directLabel) return directLabel;
+
+  const wrapper=el.closest('div');
+  const wrapperLabel=wrapper?.querySelector(':scope > label');
+  if(wrapperLabel) return wrapperLabel.innerText.trim();
+
+  const h3=el.previousElementSibling?.tagName==='H3'
+    ? el.previousElementSibling.innerText.trim()
+    : '';
+  if(h3) return h3;
+
+  return el.name || 'Поле';
+}
+
+function collectAnswers(){
+  const result=[];
   const sections=[...form.querySelectorAll('.card')];
-  const preview=document.getElementById('preview');
-  const content=document.getElementById('previewContent');
-  content.innerHTML='';
 
   sections.forEach(section=>{
     const title=section.querySelector('h2')?.innerText.trim() || 'Раздел';
-    const card=document.createElement('div');
-    card.className='answer-card';
-    const h=document.createElement('h3');
-    h.textContent=title;
-    card.appendChild(h);
+    const fields=[...section.querySelectorAll('input[name],select[name],textarea[name]')]
+      .filter(el=>!['hidden','button','submit','reset'].includes(el.type));
 
-    const fields=[...section.querySelectorAll('input[name],select[name],textarea[name]')];
-    const used=new Set();
+    const rows=[];
+    const usedGroups=new Set();
 
     fields.forEach(el=>{
-      if(used.has(el.name) || el.type==='hidden' || el.type==='button' || el.type==='submit') return;
-
-      let value='';
-      let label='';
-
       if(el.type==='checkbox' || el.type==='radio'){
-        const checked=[...section.querySelectorAll(`input[name="${CSS.escape(el.name)}"]:checked`)];
-        if(!checked.length){ used.add(el.name); return; }
-        value=checked.map(x=>x.parentElement?.innerText.trim() || x.value).join(', ');
-        label=checked.length>1 ? (el.closest('.checkgrid')?.previousElementSibling?.innerText.trim() || 'Выбранные варианты') : (el.parentElement?.innerText.trim() || el.name);
-      } else {
-        value=el.value.trim();
-        const l=section.querySelector(`label[for="${CSS.escape(el.id)}"]`);
-        label=l?.innerText.trim() || el.closest('div')?.querySelector('label')?.innerText.trim() || el.name;
+        if(usedGroups.has(el.name)) return;
+        usedGroups.add(el.name);
+
+        const group=[...section.querySelectorAll('input[name="'+CSS.escape(el.name)+'"]')]
+          .filter(x=>x.type===el.type);
+        const checked=group.filter(x=>x.checked);
+        const label=fieldLabel(el,section);
+        const value=checked.length
+          ? checked.map(x=>x.parentElement?.innerText.trim() || x.value).join(', ')
+          : 'Не выбрано';
+        rows.push({label,value});
+        return;
       }
 
-      used.add(el.name);
+      const label=fieldLabel(el,section);
+      let value=(el.value || '').trim();
       if(!value) value='Не заполнено';
-
-      const row=document.createElement('div');
-      row.className='answer-row';
-
-      const lab=document.createElement('div');
-      lab.className='answer-label';
-      lab.textContent=label;
-
-      const val=document.createElement('div');
-      val.className=value==='Не заполнено'?'answer-value empty':'answer-value';
-      val.textContent=value;
-
-      row.append(lab,val);
-      card.appendChild(row);
+      rows.push({label,value});
     });
 
-    content.appendChild(card);
+    result.push({title,rows});
   });
 
+  return result;
+}
+
+function renderAnswers(){
+  const data=collectAnswers();
+  const containers=[
+    document.getElementById('previewContent'),
+    document.getElementById('pdfContent')
+  ];
+
+  containers.forEach(content=>{
+    content.innerHTML='';
+
+    data.forEach(section=>{
+      const card=document.createElement('div');
+      card.className='answer-card';
+
+      const h=document.createElement('h3');
+      h.textContent=section.title;
+      card.appendChild(h);
+
+      section.rows.forEach(item=>{
+        const row=document.createElement('div');
+        row.className='answer-row';
+
+        const label=document.createElement('div');
+        label.className='answer-label';
+        label.textContent=item.label;
+
+        const value=document.createElement('div');
+        value.className=item.value==='Не заполнено' || item.value==='Не выбрано'
+          ? 'answer-value empty'
+          : 'answer-value';
+        value.textContent=item.value;
+
+        row.append(label,value);
+        card.appendChild(row);
+      });
+
+      content.appendChild(card);
+    });
+  });
+
+  return data;
+}
+
+function answersToRussianText(data){
+  const lines=[];
+  lines.push('БРИФ: ДОМ СЕМЬИ ЛОБУРЬ');
+  lines.push('Ответы заказчика');
+  lines.push('');
+
+  data.forEach(section=>{
+    lines.push(section.title.toUpperCase());
+    section.rows.forEach(row=>{
+      lines.push(row.label + ':');
+      lines.push(row.value);
+      lines.push('');
+    });
+    lines.push('----------------------------------------');
+  });
+
+  return lines.join('\n');
+}
+
+function makeBrief(){
+  renderAnswers();
+
+  const preview=document.getElementById('preview');
   form.style.display='none';
   preview.style.display='block';
   window.scrollTo({top:0,behavior:'smooth'});
@@ -268,6 +413,139 @@ function backToForm(){
   document.getElementById('preview').style.display='none';
   form.style.display='block';
   window.scrollTo({top:0,behavior:'smooth'});
+}
+
+async function buildPdfFile(data){
+  if(typeof html2pdf==='undefined'){
+    throw new Error('PDF-библиотека не загрузилась');
+  }
+
+  renderAnswers();
+
+  const pdfSheet=document.getElementById('pdfSheet');
+  const customerName=(form.querySelector('[name="name"]')?.value || '').trim();
+  const safeName=customerName
+    ? customerName.replace(/[^\p{L}\p{N}_-]+/gu,'_').slice(0,50)
+    : 'заказчик';
+
+  const opt={
+    margin:[10,8,10,8],
+    filename:`Бриф_Дом_семьи_Лобурь_${safeName}.pdf`,
+    image:{type:'jpeg',quality:0.96},
+    html2canvas:{
+      scale:2,
+      useCORS:true,
+      backgroundColor:'#ffffff',
+      logging:false
+    },
+    jsPDF:{unit:'mm',format:'a4',orientation:'portrait'},
+    pagebreak:{mode:['css','legacy']}
+  };
+
+  const blob=await html2pdf().set(opt).from(pdfSheet).outputPdf('blob');
+  return {blob,filename:opt.filename};
+}
+
+function setSubmitButtonsDisabled(disabled){
+  document.querySelectorAll('button[onclick*="submitBrief"]').forEach(btn=>{
+    btn.disabled=disabled;
+    btn.style.opacity=disabled?'0.6':'1';
+    btn.style.pointerEvents=disabled?'none':'auto';
+  });
+}
+
+async function submitBrief(){
+  if(isSubmitting) return;
+
+  const required=[...form.querySelectorAll('input,select,textarea')]
+    .filter(e=>e.required);
+
+  if(required.some(e=>{
+    if(e.type==='checkbox' || e.type==='radio') return !e.checked;
+    return !String(e.value||'').trim();
+  })){
+    alert('Пожалуйста, заполните обязательные поля.');
+    return;
+  }
+
+  if(!confirm('Сформировать PDF и отправить заполненный бриф дизайнеру?')) return;
+
+  isSubmitting=true;
+  setSubmitButtonsDisabled(true);
+
+  try{
+    const data=renderAnswers();
+    const russianText=answersToRussianText(data);
+    const pdf=await buildPdfFile(data);
+
+    // Separate temporary form:
+    // only Russian answer text + PDF are sent to FormSubmit.
+    // This avoids the default English Name/Value table.
+    const sendForm=document.createElement('form');
+    sendForm.method='POST';
+    sendForm.action=form.action;
+    sendForm.enctype='multipart/form-data';
+    sendForm.style.display='none';
+
+    const hidden=(name,value)=>{
+      const input=document.createElement('input');
+      input.type='hidden';
+      input.name=name;
+      input.value=value;
+      sendForm.appendChild(input);
+    };
+
+    hidden('_subject','Бриф: Дом семьи Лобурь — ответы заказчика');
+    hidden('_captcha','false');
+    hidden('_template','basic');
+    hidden('_next','https://linasendler23-lab.github.io/dom-lobur/?sent=1');
+    hidden('Ответы заказчика',russianText);
+
+    const fileInput=document.createElement('input');
+    fileInput.type='file';
+    fileInput.name='PDF брифа';
+    const file=new File([pdf.blob],pdf.filename,{type:'application/pdf'});
+
+    const dt=new DataTransfer();
+    dt.items.add(file);
+    fileInput.files=dt.files;
+    sendForm.appendChild(fileInput);
+
+    document.body.appendChild(sendForm);
+    sendForm.submit();
+
+  }catch(error){
+    console.error(error);
+    alert(
+      'Не удалось сформировать PDF, поэтому бриф НЕ отправлен.\n\n' +
+      'Проверьте интернет-соединение и попробуйте ещё раз.'
+    );
+    isSubmitting=false;
+    setSubmitButtonsDisabled(false);
+  }
+}
+
+// Native Enter-submit is routed through the same safe flow.
+// The actual final submit uses a temporary form, so there is only one request.
+form.addEventListener('submit',function(event){
+  event.preventDefault();
+  submitBrief();
+});
+
+// After returning from FormSubmit, show a Russian confirmation and leave the
+// form ready for a completely new submission.
+if(new URLSearchParams(location.search).get('sent')==='1'){
+  const notice=document.createElement('div');
+  notice.className='notice';
+  notice.style.margin='0 0 16px';
+  notice.innerHTML='<strong>Бриф отправлен.</strong><br>PDF с ответами заказчика отправлен дизайнеру. Можно заполнить и отправить новый бриф.';
+  const wrap=document.querySelector('.wrap');
+  const hero=wrap?.querySelector('.hero');
+  if(hero && hero.nextSibling){
+    wrap.insertBefore(notice,hero.nextSibling);
+  }else if(wrap){
+    wrap.prepend(notice);
+  }
 }
 </script>
 </body></html>
