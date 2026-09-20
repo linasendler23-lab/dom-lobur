@@ -101,6 +101,46 @@ footer{color:var(--muted);font-size:12px;text-align:center;margin-top:18px}
   display:none;
 }
 
+/* Submission loading overlay */
+#submitLoading{
+  position:fixed;
+  inset:0;
+  z-index:10000;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+  background:rgba(20,18,16,.28);
+  backdrop-filter:blur(2px);
+}
+#submitLoading.is-visible{display:flex}
+#submitLoading .loading-box{
+  width:min(390px,100%);
+  padding:26px 28px;
+  border-radius:20px;
+  background:#fff;
+  box-shadow:0 18px 60px rgba(20,18,16,.18);
+  text-align:center;
+}
+#submitLoading .loading-spinner{
+  width:34px;
+  height:34px;
+  margin:0 auto 14px;
+  border:3px solid #ded9d1;
+  border-top-color:#242321;
+  border-radius:50%;
+  animation:briefSpin .7s linear infinite;
+}
+#submitLoading strong{
+  display:block;
+  font-size:17px;
+  margin-bottom:5px;
+}
+#submitLoading span{
+  color:var(--muted);
+  font-size:13px;
+}
+
 /* PDF / print version */
 #pdfSheet{
   width: 794px;
@@ -355,6 +395,13 @@ footer{color:var(--muted);font-size:12px;text-align:center;margin-top:18px}
 <button class="btn" onclick="submitBrief()" type="button"><span class="btn-spinner" aria-hidden="true"></span><span class="btn-label">Отправить дизайнеру</span></button>
 </div>
 </section>
+<div aria-live="polite" aria-busy="true" id="submitLoading">
+  <div class="loading-box">
+    <div class="loading-spinner" aria-hidden="true"></div>
+    <strong>Отправляем бриф…</strong>
+    <span>Пожалуйста, подождите — письмо отправляется дизайнеру.</span>
+  </div>
+</div>
 <div aria-labelledby="successTitle" aria-modal="true" id="successModal" role="dialog">
 <div class="success-box">
 <div class="success-icon">✓</div>
@@ -397,8 +444,21 @@ function fieldLabel(el,section){
     if(heading) return heading.innerText.trim();
     return el.parentElement?.innerText.trim()||'Выбранные варианты';
   }
+
+  const explicitLabels={
+    users:'Кто будет пользоваться домом?',
+    final:'Финальные пожелания'
+  };
+  if(explicitLabels[el.name]) return explicitLabels[el.name];
+
   const direct=el.previousElementSibling?.tagName==='LABEL' ? el.previousElementSibling.innerText.trim() : '';
   if(direct) return direct;
+
+  const previousHeading=el.previousElementSibling;
+  if(previousHeading && (previousHeading.tagName==='H3' || previousHeading.tagName==='H2')){
+    return previousHeading.innerText.trim();
+  }
+
   const wrapper=el.closest('div');
   const wl=wrapper?.querySelector(':scope > label');
   if(wl) return wl.innerText.trim();
@@ -539,6 +599,9 @@ function setSubmitButtonsDisabled(disabled){
     if(label) label.textContent=disabled?'Отправляем бриф…':(btn.dataset.defaultLabel||'Отправить дизайнеру');
     btn.setAttribute('aria-busy', disabled?'true':'false');
   });
+
+  const overlay=document.getElementById('submitLoading');
+  if(overlay) overlay.classList.toggle('is-visible', disabled);
 }
 
 function showSuccessModal(){
@@ -599,6 +662,10 @@ async function submitBrief(){
       brief_answers: russianText,
       brief_html: briefHtml
     };
+
+    // Даём браузеру два кадра на отрисовку плашки ожидания и анимации
+    // перед сетевым запросом EmailJS.
+    await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 
     // Отправляем только текстовые данные. PDF и вложения больше не используются.
     await emailjs.send(
