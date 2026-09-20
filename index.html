@@ -37,6 +37,51 @@ footer{color:var(--muted);font-size:12px;text-align:center;margin-top:18px}
 
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script><style>
+
+/* Submission success modal */
+#successModal{
+  position:fixed;
+  inset:0;
+  z-index:9999;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+  background:rgba(20,28,40,.42);
+  backdrop-filter:blur(3px);
+}
+#successModal .success-box{
+  width:min(520px,100%);
+  box-sizing:border-box;
+  padding:32px;
+  border-radius:24px;
+  background:#fff;
+  box-shadow:0 20px 70px rgba(20,28,40,.20);
+  text-align:center;
+}
+#successModal .success-icon{
+  width:58px;
+  height:58px;
+  margin:0 auto 18px;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  font-size:28px;
+  background:#e9f6ed;
+}
+#successModal h2{
+  margin:0 0 10px;
+  font-size:24px;
+}
+#successModal p{
+  margin:0 0 22px;
+  color:var(--muted);
+  line-height:1.5;
+}
+#formSubmitFrame{
+  display:none;
+}
+
 /* PDF / print version */
 #pdfSheet{
   width: 794px;
@@ -118,7 +163,7 @@ footer{color:var(--muted);font-size:12px;text-align:center;margin-top:18px}
 <input name="_subject" type="hidden" value="Бриф: Дом семьи Лобурь"/>
 <input name="_captcha" type="hidden" value="false"/>
 <input name="_template" type="hidden" value="basic"/>
-<input name="_next" type="hidden" value="https://linasendler23-lab.github.io/dom-lobur/?sent=1"/>
+<input name="_next" type="hidden" value="https://linasendler23-lab.github.io/?sent=1"/>
 <div class="card">
 <h2>1. Данные заказчика</h2>
 <div class="grid">
@@ -251,7 +296,18 @@ footer{color:var(--muted);font-size:12px;text-align:center;margin-top:18px}
 <button class="btn secondary" onclick="backToForm()" type="button">← Назад к анкете</button>
 <button class="btn" onclick="submitBrief()" type="button">Отправить дизайнеру</button>
 </div>
-</section><div id="pdfSheet" style="position:absolute;left:-100000px;top:0;">
+</section>
+<div id="successModal" role="dialog" aria-modal="true" aria-labelledby="successTitle">
+  <div class="success-box">
+    <div class="success-icon">✓</div>
+    <h2 id="successTitle">Спасибо!</h2>
+    <p>Бриф успешно отправлен дизайнеру.<br>Анкета очищена и готова для нового заполнения.</p>
+    <button type="button" class="btn" onclick="closeSuccessModal()">Заполнить новый бриф</button>
+  </div>
+</div>
+<iframe name="formSubmitFrame" id="formSubmitFrame" title="Отправка формы"></iframe>
+
+<div id="pdfSheet" style="position:absolute;left:-100000px;top:0;">
 <div class="pdf-title">Бриф: Дом семьи Лобурь</div>
 <div class="pdf-subtitle">Ответы заказчика · дизайн-проект 1 этажа · площадь около 40,9 м²</div>
 <div id="pdfContent"></div>
@@ -280,21 +336,15 @@ function fieldLabel(el, section){
     if(heading) return heading.innerText.trim();
     return el.parentElement?.innerText.trim() || 'Выбранные варианты';
   }
-
   const directLabel=el.previousElementSibling?.tagName==='LABEL'
-    ? el.previousElementSibling.innerText.trim()
-    : '';
+    ? el.previousElementSibling.innerText.trim() : '';
   if(directLabel) return directLabel;
-
   const wrapper=el.closest('div');
   const wrapperLabel=wrapper?.querySelector(':scope > label');
   if(wrapperLabel) return wrapperLabel.innerText.trim();
-
   const h3=el.previousElementSibling?.tagName==='H3'
-    ? el.previousElementSibling.innerText.trim()
-    : '';
+    ? el.previousElementSibling.innerText.trim() : '';
   if(h3) return h3;
-
   return el.name || 'Поле';
 }
 
@@ -306,7 +356,6 @@ function collectAnswers(){
     const title=section.querySelector('h2')?.innerText.trim() || 'Раздел';
     const fields=[...section.querySelectorAll('input[name],select[name],textarea[name]')]
       .filter(el=>!['hidden','button','submit','reset'].includes(el.type));
-
     const rows=[];
     const usedGroups=new Set();
 
@@ -314,7 +363,6 @@ function collectAnswers(){
       if(el.type==='checkbox' || el.type==='radio'){
         if(usedGroups.has(el.name)) return;
         usedGroups.add(el.name);
-
         const group=[...section.querySelectorAll('input[name="'+CSS.escape(el.name)+'"]')]
           .filter(x=>x.type===el.type);
         const checked=group.filter(x=>x.checked);
@@ -329,64 +377,59 @@ function collectAnswers(){
       const label=fieldLabel(el,section);
       let value=(el.value || '').trim();
       if(!value) value='Не заполнено';
+      if(el.tagName==='SELECT' && el.selectedOptions?.[0]?.textContent?.trim()){
+        value=el.selectedOptions[0].textContent.trim();
+      }
       rows.push({label,value});
     });
 
     result.push({title,rows});
   });
-
   return result;
 }
 
 function renderAnswers(){
   const data=collectAnswers();
-  const containers=[
-    document.getElementById('previewContent'),
-    document.getElementById('pdfContent')
-  ];
+  [document.getElementById('previewContent'),document.getElementById('pdfContent')]
+    .forEach(content=>{
+      if(!content) return;
+      content.innerHTML='';
+      data.forEach(section=>{
+        const card=document.createElement('div');
+        card.className='answer-card';
 
-  containers.forEach(content=>{
-    content.innerHTML='';
+        const h=document.createElement('h3');
+        h.textContent=section.title;
+        card.appendChild(h);
 
-    data.forEach(section=>{
-      const card=document.createElement('div');
-      card.className='answer-card';
+        section.rows.forEach(item=>{
+          const row=document.createElement('div');
+          row.className='answer-row';
 
-      const h=document.createElement('h3');
-      h.textContent=section.title;
-      card.appendChild(h);
+          const label=document.createElement('div');
+          label.className='answer-label';
+          label.textContent=item.label;
 
-      section.rows.forEach(item=>{
-        const row=document.createElement('div');
-        row.className='answer-row';
+          const value=document.createElement('div');
+          value.className=item.value==='Не заполнено'||item.value==='Не выбрано'
+            ? 'answer-value empty' : 'answer-value';
+          value.textContent=item.value;
 
-        const label=document.createElement('div');
-        label.className='answer-label';
-        label.textContent=item.label;
-
-        const value=document.createElement('div');
-        value.className=item.value==='Не заполнено' || item.value==='Не выбрано'
-          ? 'answer-value empty'
-          : 'answer-value';
-        value.textContent=item.value;
-
-        row.append(label,value);
-        card.appendChild(row);
+          row.append(label,value);
+          card.appendChild(row);
+        });
+        content.appendChild(card);
       });
-
-      content.appendChild(card);
     });
-  });
-
   return data;
 }
 
 function answersToRussianText(data){
-  const lines=[];
-  lines.push('БРИФ: ДОМ СЕМЬИ ЛОБУРЬ');
-  lines.push('Ответы заказчика');
-  lines.push('');
-
+  const lines=[
+    'БРИФ: ДОМ СЕМЬИ ЛОБУРЬ',
+    'ОТВЕТЫ ЗАКАЗЧИКА',
+    ''
+  ];
   data.forEach(section=>{
     lines.push(section.title.toUpperCase());
     section.rows.forEach(row=>{
@@ -396,16 +439,13 @@ function answersToRussianText(data){
     });
     lines.push('----------------------------------------');
   });
-
   return lines.join('\n');
 }
 
 function makeBrief(){
   renderAnswers();
-
-  const preview=document.getElementById('preview');
+  document.getElementById('preview').style.display='block';
   form.style.display='none';
-  preview.style.display='block';
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
@@ -420,7 +460,11 @@ async function buildPdfFile(data){
     throw new Error('PDF-библиотека не загрузилась');
   }
 
-  renderAnswers();
+  // Hard gate: the PDF content is rendered from the same data that will be sent.
+  const rendered=renderAnswers();
+  if(!rendered?.length || !rendered.some(s=>s.rows?.length)){
+    throw new Error('Не удалось сформировать данные брифа');
+  }
 
   const pdfSheet=document.getElementById('pdfSheet');
   const customerName=(form.querySelector('[name="name"]')?.value || '').trim();
@@ -432,17 +476,17 @@ async function buildPdfFile(data){
     margin:[10,8,10,8],
     filename:`Бриф_Дом_семьи_Лобурь_${safeName}.pdf`,
     image:{type:'jpeg',quality:0.96},
-    html2canvas:{
-      scale:2,
-      useCORS:true,
-      backgroundColor:'#ffffff',
-      logging:false
-    },
+    html2canvas:{scale:2,useCORS:true,backgroundColor:'#ffffff',logging:false},
     jsPDF:{unit:'mm',format:'a4',orientation:'portrait'},
     pagebreak:{mode:['css','legacy']}
   };
 
   const blob=await html2pdf().set(opt).from(pdfSheet).outputPdf('blob');
+
+  if(!blob || blob.size < 1000){
+    throw new Error('PDF получился пустым');
+  }
+
   return {blob,filename:opt.filename};
 }
 
@@ -454,37 +498,68 @@ function setSubmitButtonsDisabled(disabled){
   });
 }
 
+function showSuccessModal(){
+  const modal=document.getElementById('successModal');
+  modal.style.display='flex';
+  document.body.style.overflow='hidden';
+}
+
+function closeSuccessModal(){
+  document.getElementById('successModal').style.display='none';
+  document.body.style.overflow='';
+  form.style.display='block';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function clearFormForNextBrief(){
+  form.reset();
+  update();
+  renderAnswers();
+  backToForm();
+}
+
 async function submitBrief(){
+  // Absolute first-line lock: no second click, Enter, or native submit can pass.
   if(isSubmitting) return;
-
-  const required=[...form.querySelectorAll('input,select,textarea')]
-    .filter(e=>e.required);
-
-  if(required.some(e=>{
-    if(e.type==='checkbox' || e.type==='radio') return !e.checked;
-    return !String(e.value||'').trim();
-  })){
-    alert('Пожалуйста, заполните обязательные поля.');
-    return;
-  }
-
-  if(!confirm('Сформировать PDF и отправить заполненный бриф дизайнеру?')) return;
-
   isSubmitting=true;
   setSubmitButtonsDisabled(true);
 
   try{
-    const data=renderAnswers();
-    const russianText=answersToRussianText(data);
-    const pdf=await buildPdfFile(data);
+    const required=[...form.querySelectorAll('input,select,textarea')]
+      .filter(e=>e.required);
 
-    // Separate temporary form:
-    // only Russian answer text + PDF are sent to FormSubmit.
-    // This avoids the default English Name/Value table.
+    if(required.some(e=>{
+      if(e.type==='checkbox'||e.type==='radio') return !e.checked;
+      return !String(e.value||'').trim();
+    })){
+      throw new Error('Пожалуйста, заполните обязательные поля.');
+    }
+
+    // STEP 1: collect ALL data.
+    const data=renderAnswers();
+    if(!data.length || !data.some(section=>section.rows.length)){
+      throw new Error('Не удалось собрать ответы формы.');
+    }
+
+    // STEP 2: create Russian text BEFORE any network submission.
+    const russianText=answersToRussianText(data);
+    if(!russianText || russianText.length < 50 || !russianText.includes('ОТВЕТЫ ЗАКАЗЧИКА')){
+      throw new Error('Не удалось сформировать русский текст брифа.');
+    }
+
+    // STEP 3: create and validate PDF BEFORE any network submission.
+    const pdf=await buildPdfFile(data);
+    if(!pdf?.blob || pdf.blob.size < 1000){
+      throw new Error('Не удалось сформировать PDF брифа.');
+    }
+
+    // STEP 4: only now create the actual server request.
+    // It targets a hidden iframe, so FormSubmit never replaces our page.
     const sendForm=document.createElement('form');
     sendForm.method='POST';
     sendForm.action=form.action;
     sendForm.enctype='multipart/form-data';
+    sendForm.target='formSubmitFrame';
     sendForm.style.display='none';
 
     const hidden=(name,value)=>{
@@ -498,54 +573,53 @@ async function submitBrief(){
     hidden('_subject','Бриф: Дом семьи Лобурь — ответы заказчика');
     hidden('_captcha','false');
     hidden('_template','basic');
-    hidden('_next','https://linasendler23-lab.github.io/dom-lobur/?sent=1');
+    hidden('_next','https://linasendler23-lab.github.io/?sent=1');
     hidden('Ответы заказчика',russianText);
 
     const fileInput=document.createElement('input');
     fileInput.type='file';
     fileInput.name='PDF брифа';
-    const file=new File([pdf.blob],pdf.filename,{type:'application/pdf'});
 
+    const file=new File([pdf.blob],pdf.filename,{type:'application/pdf'});
     const dt=new DataTransfer();
     dt.items.add(file);
     fileInput.files=dt.files;
     sendForm.appendChild(fileInput);
 
     document.body.appendChild(sendForm);
+
+    // STEP 5: one and only one submission.
     sendForm.submit();
+
+    // Give the browser a short moment to dispatch the request,
+    // then clear the visible form and show our own confirmation.
+    await new Promise(resolve=>setTimeout(resolve,900));
+
+    sendForm.remove();
+    clearFormForNextBrief();
+    showSuccessModal();
 
   }catch(error){
     console.error(error);
-    alert(
-      'Не удалось сформировать PDF, поэтому бриф НЕ отправлен.\n\n' +
-      'Проверьте интернет-соединение и попробуйте ещё раз.'
-    );
+    alert(error.message || 'Не удалось отправить бриф. Попробуйте ещё раз.');
+  }finally{
     isSubmitting=false;
     setSubmitButtonsDisabled(false);
   }
 }
 
-// Native Enter-submit is routed through the same safe flow.
-// The actual final submit uses a temporary form, so there is only one request.
 form.addEventListener('submit',function(event){
   event.preventDefault();
+  event.stopImmediatePropagation();
   submitBrief();
 });
 
-// After returning from FormSubmit, show a Russian confirmation and leave the
-// form ready for a completely new submission.
-if(new URLSearchParams(location.search).get('sent')==='1'){
-  const notice=document.createElement('div');
-  notice.className='notice';
-  notice.style.margin='0 0 16px';
-  notice.innerHTML='<strong>Бриф отправлен.</strong><br>PDF с ответами заказчика отправлен дизайнеру. Можно заполнить и отправить новый бриф.';
-  const wrap=document.querySelector('.wrap');
-  const hero=wrap?.querySelector('.hero');
-  if(hero && hero.nextSibling){
-    wrap.insertBefore(notice,hero.nextSibling);
-  }else if(wrap){
-    wrap.prepend(notice);
+window.addEventListener('pageshow',function(){
+  // The page itself never navigates to FormSubmit.
+  // Any old ?sent=1 link is harmless and is removed from the address bar.
+  if(location.search.includes('sent=1')){
+    history.replaceState({},'',location.pathname+location.hash);
   }
-}
+});
 </script>
 </body></html>
